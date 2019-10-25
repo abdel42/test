@@ -1,0 +1,150 @@
+@prefix geo:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ex:    <http://www.example.com/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wd:    <http://www.wikidata.org/entity/> .
+
+ex:104  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Jacquard"@fr ;
+        geo:lat     45.441888 ;
+        geo:lon     4.382492 .
+
+ex:113  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Centre 2"@fr ;
+        geo:lat     45.42342 ;
+        geo:lon     4.392292 .
+
+ex:119  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Fourneyron"@fr ;
+        geo:lat     45.4395 ;
+        geo:lon     4.395669 .
+
+ex:122  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Terrasse"@fr ;
+        geo:lat     45.46502 ;
+        geo:lon     4.37874 .
+
+ex:128  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Technopole"@fr ;
+        geo:lat     45.457 ;
+        geo:lon     4.39241 .
+
+ex:103  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Carnot"@fr ;
+        geo:lat     45.447093 ;
+        geo:lon     4.385487 .
+
+ex:109  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "A. Thomas"@fr ;
+        geo:lat     45.4328 ;
+        geo:lon     4.388035 .
+
+ex:112  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Tréfilerie"@fr ;
+        geo:lat     45.427296 ;
+        geo:lon     4.390669 .
+
+ex:118  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "J. Moulin"@fr ;
+        geo:lat     45.437404 ;
+        geo:lon     4.392469 .
+
+ex:127  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "J. Marc"@fr ;
+        geo:lat     45.4732778 ;
+        geo:lon     4.3665277 .
+
+ex:102  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Chaléassiere"@fr ;
+        geo:lat     45.453601 ;
+        geo:lon     4.383062 .
+
+ex:108  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Peuple"@fr ;
+        geo:lat     45.436265 ;
+        geo:lon     4.387539 .
+
+ex:130  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Bicentenaire"@fr ;
+        geo:lat     45.420286 ;
+        geo:lon     4.392776 .
+
+ex:111  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Tardy"@fr ;
+        geo:lat     45.427396 ;
+        geo:lon     4.386718 .
+
+ex:117  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Chavanelle"@fr ;
+        geo:lat     45.435109 ;
+        geo:lon     4.391962 .
+
+ex:120  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "St Francois"@fr ;
+        geo:lat     45.439538 ;
+        geo:lon     4.403407 .
+
+ex:126  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Hôp. Nord"@fr ;
+        geo:lat     45.479487 ;
+        geo:lon     4.362541 .
+
+ex:101  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Châteaucreux"@fr ;
+        geo:lat     45.442972 ;
+        geo:lon     4.398855 .
+
+ex:107  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Clapier"@fr ;
+        geo:lat     45.436903 ;
+        geo:lon     4.378789 .
+
+ex:110  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "A. France"@fr ;
+        geo:lat     45.43065 ;
+        geo:lon     4.389752 .
+
+ex:116  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Villeboeuf"@fr ;
+        geo:lat     45.431808 ;
+        geo:lon     4.395127 .
+
+ex:125  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Soleil"@fr ;
+        geo:lat     45.450533 ;
+        geo:lon     4.403566 .
+
+ex:106  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Dorian"@fr ;
+        geo:lat     45.43836 ;
+        geo:lon     4.388435 .
+
+ex:115  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Congrès"@fr ;
+        geo:lat     45.426972 ;
+        geo:lon     4.404048 .
+
+ex:124  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Janin"@fr ;
+        geo:lat     45.448458 ;
+        geo:lon     4.39492 .
+
+ex:105  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Jaures"@fr ;
+        geo:lat     45.440725 ;
+        geo:lon     4.387295 .
+
+ex:114  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Bellevue"@fr ;
+        geo:lat     45.415579 ;
+        geo:lon     4.393322 .
+
+ex:123  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Marx"@fr ;
+        geo:lat     45.422732 ;
+        geo:lon     4.409376 .
+
+ex:129  a           geo:SpatialThing , wd:Q61663696 ;
+        rdfs:label  "Roannelle"@fr ;
+        geo:lat     45.4357171 ;
+        geo:lon     4.3829931 .
