@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Station</title>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!-- Import Leaflet CSS Style Sheet -->
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+    <!-- Import Leaflet JS Library -->
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+</head>
+<body class="pt-0">
+
+<style>
+
+    #carte { /* use the same name as <div id=""> */
+        width: 100%; /* important! if you need full width display */
+        height: 400px;
+        margin: 0;
+        border-radius: 5px;
+        /* ... */
+    }
+
+
+</style>
+<main role="main" class="container">
+    <div class="col-md-12">
+        <h2>
+            <span th:text="'Station de vélo de ' + ${nomVille}"></span>
+        </h2>
+    </div>
+
+    <!--
+    <ol>
+        <li th:each="resultats : ${results}" th:text="${resultats}"></li>
+    </ol>
+    -->
+
+    <div class="card mt-1">
+        <div class="card-body">
+            <h4 th:text="${nomVille}" class="card-title"></h4>
+            <h6 class="card-subtitle">Il y a <span th:text="${veloDispo}"></span> vélos dispo actuellement</h6>
+            <div class="col-md-12 pt-1">&nbsp;</div>
+
+            <div id="carte">
+                <!-- carte-->
+            </div>
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+
+                var mymap = L.map('carte', { /* use the same name as your <div id=""> */
+                    center: [ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ], /* set GPS Coordinates */
+                    zoom: 16, /* define the zoom level */
+                    zoomControl: true, /* false = no zoom control buttons displayed */
+                    scrollWheelZoom: false /* false = scrolling zoom on the map is locked */
+                });
+                L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFkNDIiLCJhIjoiY2syYWZxd3Z1M3E5ZTNubXYxcTB3bXk1dyJ9.rJdChy_JhIFVlH4MFzTtKw', { /* set your personal MapBox Access Token */
+                    maxZoom: 20, /* zoom limit of the map */
+                    attribution: 'Données &copy; Contributeurs <a href="http://openstreetmap.org">OpenStreetMap</a> + ' +
+                        '<a href="http://mapbox.com">Mapbox</a> | ' +
+                        '<a href="https://creativecommons.org/licenses/by/2.0/">CC-BY</a> ' +
+                        'Guillaume Rouan 2016', /* set the map's caption */
+                    id: 'mapbox.streets' /* mapbox.light / dark / streets / outdoors / satellite */
+                }).addTo(mymap);
+
+                L.marker([ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+
+
+                var markers = []; // Nous initialisons la liste des marqueurs
+
+                /*]]>*/
+            </script>
+
+
+
+            <div th:each="point, i : ${listePoint}">
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    var marker = L.marker([ /*[[${point.getX()}]]*/ , /*[[${point.getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+                    markers.push(marker);
+                    /*]]>*/
+                </script>
+
+                <!--
+                https://nouvelle-techno.fr/actualites/2018/05/11/pas-a-pas-inserer-une-carte-openstreetmap-sur-votre-site
+                -->
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <div class="card mt-1" th:each="resultats : ${results}">
+        <div class="card-body" >
+            <h5 th:text="${resultats.getNom()}" class="card-title"></h5>
+            <!--   https://www.google.com/maps/search/?api=1&query=<lat>,<lng>    -->
+            <p th:text="${resultats}" class="card-text"></p>
+        </div>
+    </div>
+</main>
+<!-- /.container -->
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
+

@@ -1,41 +1,152 @@
-
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:meteo="http://purl.org/ns/meteo#">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Ville</title>
-
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
+    <!-- Import Leaflet CSS Style Sheet -->
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+    <!-- Import Leaflet JS Library -->
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
 </head>
+<body class="pt-0">
+<style>
 
-<body>
+    #carte { /* use the same name as <div id=""> */
+        width: 100%; /* important! if you need full width display */
+        height: 400px;
+        margin: 0;
+        border-radius: 5px;
+        /* ... */
+    }
 
 
-<div class="col-md-8 text-center">
-    <button class="btn-lg">TEST</button>
-</div>
-
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">BikeShare</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/add">Add</a>
+        </div>
+    </div>
+</nav>
 <main role="main" class="container">
-
-    <div class="starter-template">
-        <h1>Page de la ville</h1>
+    <div class="col-md-12">
         <h2>
             <span th:text="'Station de vélo de la ville de ' + ${nomVille}"></span>
         </h2>
     </div>
+    <div class="card mt-1">
+        <div class="card-body">
+            <h4 th:text="${nomVille}" class="card-title"></h4>
+            <h6 class="card-subtitle">Il y a <span th:text="${results.size()}"></span> stations de vélo-partage</h6>
+            <span  id="city-aqi-container">No air quality available...</span>
+            <br/>
+            <span th:attr="about=${nomVille}" >The meteo system indicates : <span th:text="${meteo}"  ></span> on the city, we can also say that the temperature is a
+            bout <span th:text="${temperature}"></span> °C ...</span>
+            <span vocab="http://purl.org/ns/meteo#" property="Forecast" th:attr="resource='http://ex.com/'+${nomVille}">
+                <span vocab="http://purl.org/ns/meteo#"  property="cloudCover" th:attr="content=${meteo}"></span>
+                <span vocab="http://purl.org/ns/meteo#"  property="temperature" datatype="xsd:float" th:attr="content=${temperature}"></span>
 
-    <ol>
-        <li th:each="task : ${tasks}" th:text="${task}"></li>
-    </ol>
+                <span property="temperatureUnit" content="dbo:celsius"></span>
+            </span>
+            <div id="carte">
+                <!-- carte-->
+            </div>
+            <script th:inline="javascript">
+                    /*<![CDATA[*/
 
+                    var mymap = L.map('carte', { /* use the same name as your <div id=""> */
+                        center: [ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ], /* set GPS Coordinates */
+                        zoom: 17, /* define the zoom level */
+                        zoomControl: true, /* false = no zoom control buttons displayed */
+                        scrollWheelZoom: false /* false = scrolling zoom on the map is locked */
+                    });
+
+
+                    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFkNDIiLCJhIjoiY2syYWZxd3Z1M3E5ZTNubXYxcTB3bXk1dyJ9.rJdChy_JhIFVlH4MFzTtKw', { /* set your personal MapBox Access Token */
+                        maxZoom: 20, /* zoom limit of the map */
+                        attribution: 'Données &copy; Contributeurs <a href="http://openstreetmap.org">OpenStreetMap</a> + ' +
+                            '<a href="http://mapbox.com">Mapbox</a> | ' +
+                            '<a href="https://creativecommons.org/licenses/by/2.0/">CC-BY</a> ' +
+                            'Guillaume Rouan 2016', /* set the map's caption */
+                        id: 'mapbox.streets' /* mapbox.light / dark / streets / outdoors / satellite */
+                    }).addTo(mymap);
+
+                    L.marker([ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+
+
+                    var markers = []; // Nous initialisons la liste des marqueurs
+
+                    /*]]>*/
+                </script>
+            <div th:each="point, i : ${listePoint}">
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+
+                    var marker = L.marker([ /*[[${point.getX()}]]*/ , /*[[${point.getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+                    var ville = [[${results.get(i.index).getNom()}]];
+                    var lien = "";
+                    var lien = lien.concat('<a href="/station?name=',ville,'&city=',[[${nomVille}]],'">',ville,'</a>');
+                    if([[${results.size()}]]<30){
+                        var lienFinal = lien.concat('<p>There is [[${results.get(i.index).getNb_velo_disp()}]] bike available now</p>');
+                    }else{
+                        var lienFinal = lien;
+                    }
+
+
+
+
+                    //http://localhost:8080/station?name=Terrasse&city=Saint-%C3%89tienne
+
+                    marker.bindPopup(lienFinal);
+                    markers.push(marker);
+                    /*]]>*/
+                </script>
+
+                <!--
+                https://nouvelle-techno.fr/actualites/2018/05/11/pas-a-pas-inserer-une-carte-openstreetmap-sur-votre-site
+                -->
+
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var group = new L.featureGroup(markers); // Nous créons le groupe des marqueurs pour adapter le zoom
+        mymap.fitBounds(group.getBounds().pad(0.1));
+        /*]]>*/
+    </script>
+    <div style="visibility: hidden" class="card mt-1" th:each="resultats : ${results}" vocab="http://ex.com/" typeof="station" th:attr="resource='http://ex.com/'+${resultats.getId()}">
+        <div class="card-body" >
+            <h5 property="rdfs:label  xml:lang='fr'"th:text="${resultats.getNom()}" class="card-title"></h5>
+            <meta property="latitude" datatype="xsd:float" vocab="http://www.w3.org/2003/01/geo/wgs84_pos#"  th:attr="content=${resultats.getLatitude()}" />
+            <meta property="longitude" datatype="xsd:float" vocab="http://www.w3.org/2003/01/geo/wgs84_pos#" th:attr="content=${resultats.getLongitude()}" />
+            </span>
+            <span vocab="http://dbpedia.org/ontology/" property="locationCity" typeof="city">
+                <span><span property="rdfs:label" th:text="${nomVille}"/></span>
+            </span>
+            <p th:text="${resultats}" class="card-text"></p>
+        </div>
+    </div>
 </main>
 <!-- /.container -->
-
+<script  type="text/javascript"  charset="utf-8">
+    (function(w,d,t,f){  w[f]=w[f]||function(c,k,n){s=w[f],k=s['k']=(s['k']||(k?('&k='+k):''));s['c']=
+        c=(c  instanceof  Array)?c:[c];s['n']=n=n||0;L=d.createElement(t),e=d.getElementsByTagName(t)[0];
+        L.async=1;L.src='//feed.aqicn.org/feed/'+(c[n].city)+'/'+(c[n].lang||'')+'/feed.v1.js?n='+n+k;
+        e.parentNode.insertBefore(L,e);  };  })(  window,document,'script','_aqiFeed'  );
+</script>
+<script  type="text/javascript"  charset="utf-8">
+    _aqiFeed({  display:"%aqi <small>(%impact)</small>", container:"city-aqi-container",  city:"[[${nomVille}]]", lang:"en"});
+</script>
 <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
 </body>
 </html>
-

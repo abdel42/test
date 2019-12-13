@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Station</title>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!-- Import Leaflet CSS Style Sheet -->
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+    <!-- Import Leaflet JS Library -->
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body class="pt-0">
+<style>
+
+    #carte { /* use the same name as <div id=""> */
+        width: 100%; /* important! if you need full width display */
+        height: 400px;
+        margin: 0;
+        border-radius: 5px;
+        /* ... */
+    }
+
+    #gaucheCarte{ /* use the same name as <div id=""> */
+        width: 100%; /* important! if you need full width display */
+        height: 400px;
+        margin: 0;
+        border-radius: 5px;
+
+        /* ... */
+    }
+
+
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">BikeShare</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/add">Add</a>
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container" vocab="http://ex.com/" typeof="station" th:attr="resource='http://ex.com/'+${results.get(0).getId()}">
+    <div class="col-md-12">
+        <h2>
+          <!--  <span th:text="'Station de vélo de ' + ${nomVille}"></span> -->
+        </h2>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6" >
+               <!-- <h4 th:text="${nomVille}" class="card-title"></h4> -->
+                    <div class="card mt-1" th:each="resultats : ${results}">
+                        <div class="card-body" id="gaucheCarte" >
+                            <h5> Station : <span th:text="${resultats.getNom()}" class="card-title"/> <span class="text-right font-italic" th:text="${cityName}"> </span></h5>
+                            <span property="rdfs:label  xml:lang='fr'"th:text="${resultats.getNom()}"></span>
+
+                            <span vocab="http://purl.org/ns/meteo#"  property="cloudCover" th:attr="content=${meteo}"></span>
+                <span vocab="http://purl.org/ns/meteo#"  property="temperature" datatype="xsd:float" th:attr="content=${temperature}"></span>
+
+
+                            </span>
+                        <!--   https://www.google.com/maps/search/?api=1&query=<lat>,<lng>    -->
+                            <p class="card-subtitle"><span th:text="${veloDispo}"></span> bike(s) now available in this station</p>
+                            <p> Latitude : <span property="latitude" vocab="http://www.w3.org/2003/01/geo/wgs84_pos#" datatype="xsd:float" th:attr="content=${resultats.getLatitude()}" th:text="${resultats.getLatitude()}" class="card-text"/> Longitude : <span property="longitude" datatype="xsd:float" vocab="http://www.w3.org/2003/01/geo/wgs84_pos#" th:attr="content=${resultats.getLongitude()}" th:text="${resultats.getLongitude()}" class="card-text"/></p>
+                            <p> Average disponibility : <span property="avgDispo" datatype="xsd:float" vocab="vocab:" th:attr="content=${avgDispo}" th:text="${avgDispo}" class="card-text"/> (based on <span th:text="${basedOn}"> </span> visit(s))</p>
+                            <p> Meteo now : <span th:text="${meteo}"></span>, and the temperature is about  <span th:text="${temperature}"></span> °C</p>
+                            <span vocab="http://www.w3.org/2000/01/rdf-schema#" property="locationCity" typeof="city">
+                                <span><span property="rdfs:label" th:content="${cityName}"/></span>
+                            </span>
+                            <span vocab="http://vocab.com/" property="hasDispo" typeof="dispo" th:each="dispo : ${listeDispo}" >
+                                <span>
+                                    <span property="rdfs:date" datatype="xsd:date" th:content="${dispo.getDate()}"/>
+                                </span>
+                                <span property="vocab:hasDispo" datatype="xsd:integer" th:content="${dispo.getNombre()}">
+                                </span>
+                            </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="carte">
+                    <!-- carte-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <ol>
+        <li th:each="resultats : ${results}" th:text="${resultats}"></li>
+    </ol>
+    -->
+    <div class="col-md-12 pt-1">&nbsp;</div>
+    <script th:inline="javascript">
+                /*<![CDATA[*/
+
+                var mymap = L.map('carte', { /* use the same name as your <div id=""> */
+                    center: [ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ], /* set GPS Coordinates */
+                    zoom: 16, /* define the zoom level */
+                    zoomControl: true, /* false = no zoom control buttons displayed */
+                    scrollWheelZoom: false /* false = scrolling zoom on the map is locked */
+                });
+                L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFkNDIiLCJhIjoiY2syYWZxd3Z1M3E5ZTNubXYxcTB3bXk1dyJ9.rJdChy_JhIFVlH4MFzTtKw', { /* set your personal MapBox Access Token */
+                    maxZoom: 20, /* zoom limit of the map */
+                    attribution: 'Données &copy; Contributeurs <a href="http://openstreetmap.org">OpenStreetMap</a> + ' +
+                        '<a href="http://mapbox.com">Mapbox</a> | ' +
+                        '<a href="https://creativecommons.org/licenses/by/2.0/">CC-BY</a> ' +
+                        'Guillaume Rouan 2016', /* set the map's caption */
+                    id: 'mapbox.streets' /* mapbox.light / dark / streets / outdoors / satellite */
+                }).addTo(mymap);
+
+                L.marker([ /*[[${listePoint.get(0).getX()}]]*/ , /*[[${listePoint.get(0).getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+
+
+                var markers = []; // Nous initialisons la liste des marqueurs
+
+                /*]]>*/
+            </script>
+    <div th:each="point, i : ${listePoint}">
+        <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    var marker = L.marker([ /*[[${point.getX()}]]*/ , /*[[${point.getY()}]]*/ ]).addTo(mymap); /* set your location's GPS Coordinates : [LAT,LON] */
+                    markers.push(marker);
+                    /*]]>*/
+                </script>
+                <!--
+                https://nouvelle-techno.fr/actualites/2018/05/11/pas-a-pas-inserer-une-carte-openstreetmap-sur-votre-site
+                -->
+    </div>
+    <!-- </div> -->
+</main>
+<!-- /.container -->
+
+
+
+
+
+
+<div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var one = "Date";
+        var two = "Availability";
+        var test =
+            [
+                ['Date', 'Avaibility']
+            ];
+        /*[# th:each="dispo : ${listeDispo}"]*/
+        test.push(['[[${dispo.getDate()}]] [[${dispo.getHeure()}]] H',/*[[${dispo.getNombre()}]]*/]);
+        /*[/]*/
+
+
+        var data = google.visualization.arrayToDataTable(test);
+
+        var options = {
+            title: 'Evolution of avaibility of bikes',
+            hAxis: {title: 'Evolution of avaibility of bikes',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+    /*]]>*/
+
+</script>
+
+
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
+

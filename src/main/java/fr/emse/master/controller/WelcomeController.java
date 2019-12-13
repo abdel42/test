@@ -1,5 +1,6 @@
 package fr.emse.master.controller;
 
+import fr.emse.master.Utils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
 import org.json.JSONArray;
@@ -16,12 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
-
+import java.util.*;
 
 
 import org.apache.jena.atlas.json.JsonObject;
@@ -65,7 +61,7 @@ public class WelcomeController {
 
         /*   */
 
-        String serviceURI = "http://localhost:3030/Test";
+        String serviceURI = "http://localhost:3030/test2";
         DatasetAccessorFactory factory = null;
         DatasetAccessor accessor;
         accessor = factory.createHTTP(serviceURI);
@@ -75,21 +71,26 @@ public class WelcomeController {
 
 
 
-        /*     Model    */
+        /*
+
+
+
+
+        //     Model
 
         // create an empty Modelx
         //il faut mettre le chemin complet pour ne pas provoquer de conflit avec Spring
         org.apache.jena.rdf.model.Model modele = ModelFactory.createDefaultModel();
 
 
-        /* Définition */
+        // Définition
         String geo = "http://www.w3.org/2003/01/geo/wgs84_pos#";
         String ex = "http://www.example.com/";
         String xsd = "http://www.w3.org/2001/XMLSchema#";
         String rdfs = "http://www.w3.org/2000/01/rdf-schema#";
         String wd = "http://www.wikidata.org/entity/";
 
-        /* Prefix */
+        // Prefix
         modele.setNsPrefix("ex", ex);
         modele.setNsPrefix( "geo", geo );
         modele.setNsPrefix("xsd", xsd);
@@ -98,7 +99,6 @@ public class WelcomeController {
 
 
 
-        /*   <---------------> */
 
 
 
@@ -196,15 +196,43 @@ public class WelcomeController {
 
 
 
-        //interrogation de fuseki
-        String queryString =
-                "PREFIX wdt: <http://www.wikidata.org/prop/direct/> \n" +
-                        "PREFIX wd: <http://www.wikidata.org/entity/> \n" +
-                        "SELECT ?subject ?predicate ?object WHERE { \n" +
-                        "?subject ?predicate ?object\n" +
-                        "}\n" ;
+        */
 
-        queryFuseki(queryString);
+        //interrogation de fuseki
+
+
+        /*
+        String query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX vocab: <http://localhost/>\n" +
+                "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n" +
+                "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+                "\n" +
+                "SELECT ?subject ?predicate ?object\n" +
+                "WHERE {\n" +
+                "  ?subject geo:lat ?object\n" +
+                "}";
+                */
+
+
+        //les différentes villes présentent en base
+        String query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX vocab: <http://localhost/>\n" +
+                "PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \n" +
+                "PREFIX schema: <http://schema.org/>\n" +
+                "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "\n" +
+                "SELECT ?nom\n" +
+                "WHERE {\n" +
+                "  ?label a schema:City.\n" +
+                "  ?label rdfs:label ?nom\n" +
+                "}\n" +
+                "";
+
+        List<String> listeResultatString = queryFuseki(query, server);
+
+        model.addAttribute("results", listeResultatString);
+
 
         return "welcome"; //view
     }
@@ -217,5 +245,46 @@ public class WelcomeController {
         model.addAttribute("message", name);
 
         return "welcome"; //view
+    }
+
+
+
+
+    /**
+     * Permet d'interroger http://localhost:3030/Test avec une requete SPARQL
+     * @param queryString
+     * @return la liste des résultats
+     */
+    public List<String> queryFuseki(String queryString, String url){
+        //connection
+        org.apache.jena.rdf.model.Model model = FileManager.get().loadModel(url, "TTL");
+
+        List<String> listeResultatString = new ArrayList<>();
+
+        Query query = QueryFactory.create(queryString);
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+
+        ResultSet results = qexec.execSelect();
+        if(results.hasNext()) {
+            System.out.println("has results!");
+        }
+        else {
+            System.out.println("No Results!");
+        }
+
+
+
+        String temp;
+        while(results.hasNext()) {
+            QuerySolution soln = results.nextSolution();
+            Literal r = soln.getLiteral("meshId");
+            //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<" + soln.get("nom").toString());
+            temp = soln.get("nom").toString();
+            temp = temp.split("@")[0];
+            listeResultatString.add(temp);
+            System.out.println(soln);
+        }
+
+        return listeResultatString;
     }
 }

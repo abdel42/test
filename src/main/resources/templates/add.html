@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add city</title>
+    <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!-- Import Leaflet CSS Style Sheet -->
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+    <!-- Import Leaflet JS Library -->
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+</head>
+<body class="pt-0">
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">BikeShare</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/about">About</a>
+            <a class="nav-item nav-link" href="#">Pricing</a>
+            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container">
+    <div class="col-md-12">
+        <h2>
+          Add new city to our system
+        </h2>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6" >
+               <!-- <h4 th:text="${nomVille}" class="card-title"></h4> -->
+
+            </div>
+            <div class="col-md-6">
+                <div id="carte">
+                    <!-- carte-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    <ol>
+        <li th:each="resultats : ${results}" th:text="${resultats}"></li>
+    </ol>
+    -->
+    <div class="col-md-12 pt-1">
+
+            <p>To add a new city to our system, we need the name of the city and the links to the GBFS files :</p>
+
+        <form action="/add" method="post">
+            <div class="form-group">
+                <label for="cityName">City name</label>
+                <input class="form-control" id="cityName" name="cityName" placeholder="Enter city name">
+            </div>
+            <div class="form-group">
+                <label for="link">Link <em>(station_information)</em></label>
+                <input class="form-control" id="link" name = "link" placeholder="Link to GBFS file">
+            </div>
+            <div class="form-group">
+                <label for="linkDispo">Avaibility link <em>(station_status)</em></label>
+                <input class="form-control" id="linkDispo" name = "linkDispo" placeholder="Link to GBFS status file">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
+
+    <!-- </div> -->
+</main>
+<!-- /.container -->
+<script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
+</body>
+</html>
+

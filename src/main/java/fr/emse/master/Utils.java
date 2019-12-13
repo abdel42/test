@@ -10,46 +10,7 @@ import java.net.URL;
 
 public class Utils {
 
-
-
-    /**
-     * Permet d'interroger http://localhost:3030/Test avec une requete SPARQL
-     * @param queryString
-     * @return la liste des résultats
-     */
-    public static ResultSet queryFuseki(String queryString){
-        //connection
-        org.apache.jena.rdf.model.Model model = FileManager.get().loadModel("http://localhost:3030/Test", "TTL");
-        /*
-            String queryString =
-            "PREFIX wdt: <http://www.wikidata.org/prop/direct/> \n" +
-                    "PREFIX wd: <http://www.wikidata.org/entity/> \n" +
-                    "SELECT ?subject ?predicate ?object WHERE { \n" +
-                    "?subject ?predicate ?object\n" +
-                    "}\n" ;
-         */
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.create(query, model);
-
-        ResultSet results = qexec.execSelect();
-        if(results.hasNext()) {
-            System.out.println("has results!");
-        }
-        else {
-            System.out.println("No Results!");
-        }
-
-        while(results.hasNext()) {
-            QuerySolution soln = results.nextSolution();
-            Literal r = soln.getLiteral("meshId");
-            System.out.println(soln);
-        }
-
-        return results;
-    }
-
-
-
+public static String server = "http://localhost:3030/Presentation";
 
     /**
      * Met le contenu de l'URL dans une variable String

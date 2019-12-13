@@ -1,39 +1,68 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:foaf="http://xmlns.com/foaf/0.1/"
+      xmlns:dbo="http://dbpedia.org/ontology/">
+<head about="http://localhost:8080" >
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>Spring Boot Thymeleaf Hello World Example</title>
-
+    <title property="og:name">BikeShare</title>
+    <meta property="og:title" content="Bike Share">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost:8080/">
+    <meta property="og:description" content="Bike share allow you to see different bike-sharing station in few cities and see if there are avaiable.">
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
 </head>
 
-<body>
+<style>
+    body{
+        background-image: url("https://zupimages.net/up/19/50/qo9m.jpg") !important;
 
+        width: 100%;!important;
+        height: 100%;!important;
+        background-position: center;!important;
+        background-repeat: no-repeat;!important;
+        background-size: cover;!important;
+    }
 
-<div class="col-md-8 text-center">
-    <button class="btn-lg">TEST</button>
-</div>
+    html{
+        width: 100%;
+        height: 100%;
+    }
 
+</style>
+<body about="localhost/8080">
 <main role="main" class="container">
-
     <div class="starter-template">
-        <h1>Spring Boot Web Thymeleaf Example</h1>
+        <h1 property=>Bike-Share</h1>
         <h2>
-            <span th:text="'Hello, ' + ${message}"></span>
+            <span th:text="'Hello, here is different available city :'"></span>
         </h2>
+        <h6><a href="/add">Add new city</a> </h6>
     </div>
-
+    <div class="col-md-12 text-center">
+        <div class=="col-md-2"> &nbsp;</div>
+        <form action="/ville" method="get">
+            <div class="col-md-12 text-center">
+                <select id="name" name="name" class="col-md-8 custom-select-lg text-center">
+                    <option th:each="resultat : ${results}" th:value="${resultat}" th:text="${resultat}" vocab="http://ex.com/" th:attr="resource=${resultat}" typeof="city"></option>
+                </select>
+            </div>
+            <div class="col-md-12 mb-4">
+                &nbsp;
+            </div>
+            <button class="btn btn-primary btn-lg">Voir</button>
+        </form>
+        <div class=="col-md-2"> &nbsp;</div>
+    </div>
+    <!--
     <ol>
-        <li th:each="task : ${tasks}" th:text="${task}"></li>
+        <li th:each="resultats : ${results}" th:text="${resultats}"></li>
     </ol>
-
+    -->
 </main>
 <!-- /.container -->
-
 <script type="text/javascript" th:src="@{webjars/bootstrap/4.2.1/js/bootstrap.min.js}"></script>
 </body>
 </html>

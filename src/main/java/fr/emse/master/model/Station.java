@@ -13,6 +13,9 @@ public class Station {
     boolean indisponible;
     String commentaire;
     Ville ville;
+    int dispoMatin;
+    int dispoSoir;
+    int dispoAprem;
 
 
 }
